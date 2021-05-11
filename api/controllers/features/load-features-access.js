@@ -1,5 +1,5 @@
 module.exports = {
-  friendlyName: 'Load features access',
+  friendlyName: 'Features',
 
   description: '',
 

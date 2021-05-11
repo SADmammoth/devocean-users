@@ -52,8 +52,16 @@ module.exports.routes = {
     action: 'features/check-features-access',
   },
 
+  'get /access/features/all': {
+    action: 'features/get-all',
+  },
+
   'post /access/features': {
     action: 'features/load-features-access',
+  },
+
+  'patch /access/features/grant': {
+    action: 'features/grant-role',
   },
 
   'post /dev/faker/creds': {

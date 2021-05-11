@@ -1,5 +1,5 @@
 module.exports = {
-  friendlyName: 'Check features access',
+  friendlyName: 'Features',
 
   description: '',
 
@@ -9,25 +9,39 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'query' } },
     },
+    authorization: {
+      type: 'string',
+      meta: { swagger: { in: 'query' } },
+    },
   },
 
-  exits: {},
+  exits: {
+    notAuthorized: {
+      responseType: 'notAuthorized',
+    },
+  },
 
-  fn: async function ({ features }) {
-    const allowedFeatures = {
-      viewTasks: true,
-      manageTasks: true,
-      workWithTasks: true,
-      viewNotifications: true,
-      manageCollections: true,
-    };
+  fn: async function ({ features, authorization }) {
+    const userInfo = sails.helpers.jwt.verify(
+      (authorization || this.req.headers.authorization).replace('bearer ', ''),
+    );
+    if (!userInfo || !userInfo.login) {
+      throw 'notAuthorized';
+    }
 
-    console.log(features);
+    const credentials = await Credentials.findOne({ login: userInfo.login });
+    const user = await User.findOne({ credentials: credentials.id }).populate(
+      'role',
+    );
 
     const result = {};
 
+    if (typeof features === 'string') {
+      features = features.split(',');
+    }
+
     features.forEach((feature) => {
-      result[feature] = { hasAccess: allowedFeatures[feature] };
+      result[feature] = { hasAccess: !!user.role.features[feature] };
     });
 
     return result;

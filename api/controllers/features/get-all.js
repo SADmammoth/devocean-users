@@ -4,11 +4,6 @@ module.exports = {
   description: '',
 
   inputs: {
-    feature: {
-      type: 'string',
-      required: true,
-      meta: { swagger: { in: 'query' } },
-    },
     authorization: {
       type: 'string',
       meta: { swagger: { in: 'query' } },
@@ -21,7 +16,7 @@ module.exports = {
     },
   },
 
-  fn: async function ({ feature, authorization }) {
+  fn: async function ({ authorization }) {
     const userInfo = sails.helpers.jwt.verify(
       (authorization || this.req.headers.authorization).replace('bearer ', ''),
     );
@@ -35,8 +30,11 @@ module.exports = {
       'role',
     );
 
-    const hasAccess = !!user.role.features[feature];
-
-    return { hasAccess };
+    return Object.fromEntries(
+      Object.entries(user.role.features).map(([key, value]) => [
+        key,
+        { hasAccess: value },
+      ]),
+    );
   },
 };
