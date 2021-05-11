@@ -14,12 +14,21 @@ module.exports = {
       required: true,
       meta: { swagger: { in: 'body' } },
     },
+    teammateId: {
+      type: 'string',
+      meta: { swagger: { in: 'body' } },
+    },
   },
 
   exits: {},
 
-  fn: async function ({ login, password }) {
-    const credentials = await Credentials.create({ login, password });
-    return { message: `${login} registered` };
+  fn: async function ({ login, password, teammateId }) {
+    const credentials = await Credentials.create({ login, password }).fetch();
+    const user = await User.create({
+      credentials: credentials.id,
+      teammateId: teammateId,
+    }).fetch();
+
+    return { teammateId: user.teammateId, login };
   },
 };

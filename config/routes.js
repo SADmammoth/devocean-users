@@ -32,6 +32,10 @@ module.exports.routes = {
     action: 'credentials/register',
   },
 
+  'post /checkToken': {
+    action: 'credentials/check-token',
+  },
+
   'get /access/data': {
     action: 'data-access/check-data-access',
   },
@@ -50,5 +54,13 @@ module.exports.routes = {
 
   'post /access/features': {
     action: 'features/load-features-access',
+  },
+
+  'post /dev/faker/creds': {
+    action: 'dev/faker/credentials',
+  },
+
+  'post /dev/faker/roles': {
+    action: 'dev/faker/roles',
   },
 };

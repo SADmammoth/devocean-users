@@ -37,8 +37,6 @@ module.exports = {
       throw 'notAuthorized';
     }
 
-    return {
-      message: `${login} authenticated`,
-    };
+    return sails.helpers.jwt.sign({ login });
   },
 };
