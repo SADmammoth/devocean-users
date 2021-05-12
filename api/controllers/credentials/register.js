@@ -16,6 +16,7 @@ module.exports = {
     },
     teammateId: {
       type: 'string',
+      required: true,
       meta: { swagger: { in: 'body' } },
     },
   },

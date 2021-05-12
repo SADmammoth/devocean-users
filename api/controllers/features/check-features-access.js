@@ -23,7 +23,7 @@ module.exports = {
 
   fn: async function ({ features, authorization }) {
     const userInfo = sails.helpers.jwt.verify(
-      (authorization || this.req.headers.authorization).replace('bearer ', ''),
+      (authorization || this.req.headers.authorization).replace('Bearer ', ''),
     );
     if (!userInfo || !userInfo.login) {
       throw 'notAuthorized';

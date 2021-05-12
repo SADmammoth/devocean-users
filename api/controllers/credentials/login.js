@@ -37,6 +37,8 @@ module.exports = {
       throw 'notAuthorized';
     }
 
-    return sails.helpers.jwt.sign({ login });
+    const user = await User.findOne({ credentials: credentials.id });
+
+    return sails.helpers.jwt.sign({ login, teammateId: user.teammateId });
   },
 };
