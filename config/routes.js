@@ -56,6 +56,10 @@ module.exports.routes = {
     action: 'features/get-all',
   },
 
+  'get /access/features/max': {
+    action: 'features/get-max-features-by-model',
+  },
+
   'post /access/features': {
     action: 'features/load-features-access',
   },

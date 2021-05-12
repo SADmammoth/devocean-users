@@ -35,13 +35,10 @@
       "name": "Load data access"
     },
     {
-      "name": "Check feature access"
+      "name": "Features"
     },
     {
-      "name": "Check features access"
-    },
-    {
-      "name": "Load features access"
+      "name": "Roles"
     }
   ],
   "components": {
@@ -82,6 +79,12 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/data-without-required-constraint"
+          },
+          {
+            "required": [
+              "dataModel",
+              "dataItems"
+            ]
           }
         ]
       },
@@ -92,6 +95,65 @@
           "id": {
             "type": "string",
             "uniqueItems": true
+          },
+          "accessLevel": {
+            "type": "string",
+            "enum": [
+              "view",
+              "workWith",
+              "manage"
+            ]
+          },
+          "dataModel": {
+            "type": "string"
+          },
+          "dataItems": {},
+          "dataGroups": {
+            "description": "Array of **datagroup**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/datagroup"
+            }
+          },
+          "users": {
+            "description": "JSON dictionary representing the **user** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/user"
+              }
+            ]
+          }
+        }
+      },
+      "datagroup": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/datagroup-without-required-constraint"
+          }
+        ]
+      },
+      "datagroup-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **DataGroup**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "users": {
+            "description": "Array of **user**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/user"
+            }
+          },
+          "dataItems": {
+            "description": "Array of **data**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data"
+            }
           }
         }
       },
@@ -118,7 +180,8 @@
             "uniqueItems": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "uniqueItems": true
           },
           "features": {},
           "users": {
@@ -147,13 +210,29 @@
             "uniqueItems": true
           },
           "teammateId": {
-            "type": "string"
+            "type": "string",
+            "uniqueItems": true
           },
           "role": {
             "description": "JSON dictionary representing the **role** instance or FK when creating / updating / not populated",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/role"
+              }
+            ]
+          },
+          "dataGroups": {
+            "description": "Array of **datagroup**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/datagroup"
+            }
+          },
+          "credentials": {
+            "description": "JSON dictionary representing the **credentials** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/credentials"
               }
             ]
           }
@@ -289,10 +368,48 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "teammateId": {
+                    "type": "string"
                   }
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/checkToken": {
+      "post": {
+        "summary": "Check token",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
@@ -303,7 +420,33 @@
         "tags": [
           "Check data access"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "accessSubject",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User or data group id"
+          },
+          {
+            "in": "query",
+            "name": "model",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dataItem",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The requested resource"
@@ -349,9 +492,9 @@
     },
     "/access/feature": {
       "get": {
-        "summary": "Check feature access",
+        "summary": "Features",
         "tags": [
-          "Check feature access"
+          "Features"
         ],
         "parameters": [
           {
@@ -361,8 +504,81 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/access/features": {
+      "get": {
+        "summary": "Features",
+        "tags": [
+          "Features"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "features",
+            "required": true,
+            "schema": {}
+          },
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Features",
+        "tags": [
+          "Features"
+        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "The requested resource"
@@ -382,23 +598,25 @@
         }
       }
     },
-    "/access/features": {
+    "/access/features/all": {
       "get": {
-        "summary": "Check features access",
+        "summary": "Features",
         "tags": [
-          "Check features access"
+          "Features"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "features",
-            "required": true,
-            "schema": {}
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "The requested resource"
+            "description": "Success"
           },
           "400": {
             "description": "Wrong request parameters or their format"
@@ -413,16 +631,145 @@
             "description": "Internal server error"
           }
         }
-      },
-      "post": {
-        "summary": "Load features access",
+      }
+    },
+    "/access/features/max": {
+      "get": {
+        "summary": "Features",
         "tags": [
-          "Load features access"
+          "Features"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/access/features/grant": {
+      "patch": {
+        "summary": "Features",
+        "tags": [
+          "Features"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "role",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "login",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The requested resource"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/dev/faker/creds": {
+      "post": {
+        "summary": "Credentials",
+        "description": "Credentials faker.",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "count",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 1,
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All done."
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/dev/faker/roles": {
+      "post": {
+        "summary": "Roles",
+        "description": "Roles faker.",
+        "tags": [
+          "Roles"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All done."
           },
           "400": {
             "description": "Wrong request parameters or their format"
