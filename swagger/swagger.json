@@ -339,13 +339,22 @@
         "tags": [
           "Credentials"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "role",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The requested resource"
           },
           "400": {
-            "description": "Wrong request parameters or their format"
+            "description": "Bad request"
           },
           "404": {
             "description": "Resource not found"
@@ -397,7 +406,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The requested resource"
+            "description": "Success"
           },
           "400": {
             "description": "Wrong request parameters or their format"

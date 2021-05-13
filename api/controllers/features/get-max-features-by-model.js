@@ -30,6 +30,8 @@ module.exports = {
       'role',
     );
 
+    if (!user) throw 'notAuthorized';
+
     return Object.fromEntries(
       Object.entries(
         sails.helpers.getMaxAccessForModel(user.role.features),

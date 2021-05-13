@@ -2,6 +2,7 @@ module.exports = {
   attributes: {
     teammateId: {
       type: 'string',
+      columnType: 'ObjectId',
       unique: true,
     },
     role: {

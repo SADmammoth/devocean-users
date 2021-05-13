@@ -7,9 +7,21 @@ module.exports = {
     token: { type: 'string', required: true },
   },
 
-  exits: {},
+  exits: {
+    notAuthorized: {
+      responseType: 'notAuthorized',
+    },
+  },
 
   fn: async function ({ token }) {
-    return sails.helpers.jwt.verify(token);
+    const userData = sails.helpers.jwt.verify(token);
+
+    const credentials = await Credentials.count({ login: userData.login });
+
+    if (!credentials) {
+      throw 'notAuthorized';
+    }
+
+    return userData;
   },
 };
