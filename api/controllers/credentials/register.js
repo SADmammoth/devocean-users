@@ -32,7 +32,7 @@ module.exports = {
   },
 
   fn: async function ({ login, password, teammateId, role }) {
-    const foundRole = await Role.fondOne({
+    const foundRole = await Role.findOne({
       or: [{ name: role }, { id: role }],
     });
     if (!foundRole) throw 'badRequest';
@@ -42,6 +42,7 @@ module.exports = {
       password,
       role: foundRole,
     }).fetch();
+
     const user = await User.create({
       credentials: credentials.id,
       teammateId: teammateId,
