@@ -75,4 +75,8 @@ module.exports.routes = {
   'post /dev/faker/roles': {
     action: 'dev/faker/roles',
   },
+
+  'get /users/:teammateId/status': {
+    action: 'users/status',
+  },
 };

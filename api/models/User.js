@@ -15,5 +15,8 @@ module.exports = {
     credentials: {
       model: 'credentials',
     },
+    lastRequest: {
+      type: 'number',
+    },
   },
 };
