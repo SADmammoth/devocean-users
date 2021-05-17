@@ -45,6 +45,10 @@ module.exports = {
       throw 'notAuthorized';
     }
 
-    return sails.helpers.jwt.sign({ login, teammateId: user.teammateId });
+    return sails.helpers.jwt.sign({
+      login,
+      teammateId: user.teammateId,
+      invited: user.invited,
+    });
   },
 };

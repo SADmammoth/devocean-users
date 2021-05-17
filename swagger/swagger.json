@@ -29,6 +29,10 @@
       "description": "Sails blueprint actions for the **Credentials** model"
     },
     {
+      "name": "User",
+      "description": "Sails blueprint actions for the **User** model"
+    },
+    {
       "name": "Check data access"
     },
     {
@@ -235,6 +239,13 @@
                 "$ref": "#/components/schemas/credentials"
               }
             ]
+          },
+          "lastRequest": {
+            "type": "number",
+            "format": "double"
+          },
+          "invited": {
+            "type": "boolean"
           }
         }
       }
@@ -339,16 +350,7 @@
         "tags": [
           "Credentials"
         ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "role",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "The requested resource"
@@ -379,6 +381,9 @@
                     "type": "string"
                   },
                   "teammateId": {
+                    "type": "string"
+                  },
+                  "role": {
                     "type": "string"
                   }
                 }
@@ -419,6 +424,97 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/acceptInvite": {
+      "patch": {
+        "summary": "Register",
+        "description": "Register credentials.",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teammateId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invite": {
+      "post": {
+        "summary": "Register",
+        "description": "Register credentials.",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "teammateId": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -779,6 +875,42 @@
         "responses": {
           "200": {
             "description": "All done."
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/users/{teammateId}/status": {
+      "get": {
+        "summary": "User",
+        "description": "Get user status",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "teammateId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           },
           "400": {
             "description": "Wrong request parameters or their format"

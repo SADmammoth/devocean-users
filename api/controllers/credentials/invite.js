@@ -47,8 +47,9 @@ module.exports = {
     const user = await User.create({
       credentials: credentials.id,
       teammateId: teammateId,
+      invited: true,
     }).fetch();
 
-    return { teammateId: user.teammateId, login };
+    return { teammateId: user.teammateId, login, invited: true };
   },
 };

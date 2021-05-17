@@ -18,5 +18,8 @@ module.exports = {
     lastRequest: {
       type: 'number',
     },
+    invited: {
+      type: 'boolean',
+    },
   },
 };

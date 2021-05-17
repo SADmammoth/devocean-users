@@ -36,6 +36,14 @@ module.exports.routes = {
     action: 'credentials/check-token',
   },
 
+  'patch /acceptInvite': {
+    action: 'credentials/accept-invite',
+  },
+
+  'post /invite': {
+    action: 'credentials/invite',
+  },
+
   'get /access/data': {
     action: 'data-access/check-data-access',
   },
