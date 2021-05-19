@@ -41,12 +41,12 @@ module.exports = {
     const credentials = await Credentials.create({
       login,
       password,
-      role: foundRole,
     }).fetch();
 
     const user = await User.create({
       credentials: credentials.id,
       teammateId: teammateId,
+      role: foundRole.id,
     }).fetch();
 
     return { teammateId: user.teammateId, login };
