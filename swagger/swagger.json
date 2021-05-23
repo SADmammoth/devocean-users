@@ -469,6 +469,47 @@
         }
       }
     },
+    "/logout": {
+      "patch": {
+        "summary": "Register",
+        "description": "Register credentials.",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The requested resource"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "teammateId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/invite": {
       "post": {
         "summary": "Register",

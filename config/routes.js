@@ -40,6 +40,10 @@ module.exports.routes = {
     action: 'credentials/accept-invite',
   },
 
+  'patch /logout': {
+    action: 'credentials/go-offline',
+  },
+
   'post /invite': {
     action: 'credentials/invite',
   },

@@ -48,7 +48,6 @@ module.exports = {
     return sails.helpers.jwt.sign({
       login,
       teammateId: user.teammateId,
-      invited: user.invited,
     });
   },
 };

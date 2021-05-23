@@ -16,12 +16,14 @@ module.exports = {
   fn: async function ({ token }) {
     const userData = sails.helpers.jwt.verify(token);
 
-    const credentials = await Credentials.count({ login: userData.login });
+    const credentials = await Credentials.findOne({ login: userData.login });
 
     if (!credentials) {
       throw 'notAuthorized';
     }
 
-    return userData;
+    const user = await User.findOne({ credentials: credentials.id });
+
+    return user;
   },
 };

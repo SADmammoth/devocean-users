@@ -5,4 +5,8 @@ module.exports = {
   viewNotifications: 'viewNotifications',
   manageNotifications: 'manageNotifications',
   manageCollections: 'manageCollections',
+  manageDocuments: 'manageDocuments',
+  viewDocuments: 'viewDocuments',
+  manageTeammates: 'manageTeammates',
+  viewTeammates: 'viewTeammates',
 };
