@@ -15,7 +15,7 @@ module.exports = {
 
   fn: async function ({ teammateId }) {
     const user = await User.findOne({ teammateId });
-
+    if (!user) return;
     if (Date.now() - user.lastRequest < 360000) {
       return { status: 'online' };
     }
