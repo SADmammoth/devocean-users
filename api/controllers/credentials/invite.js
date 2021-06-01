@@ -34,20 +34,20 @@ module.exports = {
 
   fn: async function ({ login, password, teammateId, role }) {
     const foundRole = await Role.findOne({
-      or: [{ name: role }, { id: role }],
+      or: [{ name: role || 'Admin' }, { id: role }],
     });
     if (!foundRole) throw 'badRequest';
 
     const credentials = await Credentials.create({
       login,
       password,
-      role: foundRole,
     }).fetch();
 
     const user = await User.create({
       credentials: credentials.id,
       teammateId: teammateId,
       invited: true,
+      role: foundRole.id,
     }).fetch();
 
     return { teammateId: user.teammateId, login, invited: true };
