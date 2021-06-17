@@ -26,6 +26,7 @@ module.exports = {
       (authorization || this.req.headers.authorization).replace('Bearer ', ''),
     );
 
+    console.log(userInfo);
     if (!userInfo || !userInfo.login) {
       throw 'notAuthorized';
     }
@@ -34,6 +35,8 @@ module.exports = {
     const user = await User.findOne({ credentials: credentials.id }).populate(
       'role',
     );
+
+    console.log(user);
 
     const hasAccess = !!user.role.features[feature];
 

@@ -21,7 +21,6 @@ module.exports = {
     },
     role: {
       type: 'string',
-      required: true,
       meta: { swagger: { in: 'body' } },
     },
   },
@@ -32,9 +31,9 @@ module.exports = {
     },
   },
 
-  fn: async function ({ login, password, teammateId, role }) {
+  fn: async function ({ login, password, teammateId, role = 'User' }) {
     const foundRole = await Role.findOne({
-      or: [{ name: role || 'User' }, { id: role }],
+      or: [{ name: role }, { id: role }],
     });
     if (!foundRole) throw 'badRequest';
 
