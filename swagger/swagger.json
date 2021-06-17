@@ -33,6 +33,9 @@
       "description": "Sails blueprint actions for the **User** model"
     },
     {
+      "name": "Register"
+    },
+    {
       "name": "Check data access"
     },
     {
@@ -215,6 +218,7 @@
           },
           "teammateId": {
             "type": "string",
+            "nullable": true,
             "uniqueItems": true
           },
           "role": {
@@ -343,6 +347,76 @@
         }
       }
     },
+    "/self": {
+      "delete": {
+        "summary": "Delete",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user": {
+      "delete": {
+        "summary": "Delete",
+        "tags": [
+          "Credentials"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Wrong request parameters or their format"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Record already exist or ambiguous data provided"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/register": {
       "post": {
         "summary": "Register",
@@ -353,7 +427,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "The requested resource"
+            "description": "Success"
           },
           "400": {
             "description": "Bad request"
@@ -433,7 +507,7 @@
         "summary": "Register",
         "description": "Register credentials.",
         "tags": [
-          "Credentials"
+          "Register"
         ],
         "parameters": [],
         "responses": {
@@ -474,7 +548,7 @@
         "summary": "Register",
         "description": "Register credentials.",
         "tags": [
-          "Credentials"
+          "Register"
         ],
         "parameters": [],
         "responses": {

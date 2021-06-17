@@ -9,8 +9,7 @@
  * https://sailsjs.com/config/bootstrap
  */
 
-module.exports.bootstrap = async function() {
-
+module.exports.bootstrap = async function () {
   // By convention, this is a good place to set up fake data during development.
   //
   // For example:
@@ -27,4 +26,53 @@ module.exports.bootstrap = async function() {
   // ]);
   // ```
 
+  if ((await Role.count()) === 0) {
+    await Role.createEach([
+      {
+        name: 'Admin',
+        features: {
+          workWithTasks: true,
+          manageTasks: true,
+          viewTasks: true,
+          viewNotifications: true,
+          manageNotifications: true,
+          manageCollections: true,
+          manageDocuments: true,
+          viewDocuments: true,
+          manageTeammates: true,
+          viewTeammates: true,
+        },
+      },
+      {
+        name: 'User',
+        features: {
+          workWithTasks: true,
+          manageTasks: true,
+          viewTasks: true,
+          viewNotifications: true,
+          manageNotifications: true,
+          manageCollections: true,
+          manageDocuments: true,
+          viewDocuments: true,
+          manageTeammates: false,
+          viewTeammates: true,
+        },
+      },
+    ]);
+  }
+
+  if ((await Credentials.count()) === 0) {
+    const creds = await Credentials.create({
+      login: 'root',
+      password: 'password',
+    }).fetch();
+
+    const admin = await Role.findOne({ name: 'Admin' });
+
+    await User.create({
+      credentials: creds.id,
+      teammateId: '0',
+      role: admin.id,
+    });
+  }
 };

@@ -28,6 +28,14 @@ module.exports.routes = {
     action: 'credentials/login',
   },
 
+  'delete /self': {
+    action: 'credentials/delete',
+  },
+
+  'delete /user': {
+    action: 'credentials/delete',
+  },
+
   'post /register': {
     action: 'credentials/register',
   },
@@ -37,11 +45,11 @@ module.exports.routes = {
   },
 
   'patch /acceptInvite': {
-    action: 'credentials/accept-invite',
+    action: 'users/accept-invite',
   },
 
   'patch /logout': {
-    action: 'credentials/go-offline',
+    action: 'users/go-offline',
   },
 
   'post /invite': {

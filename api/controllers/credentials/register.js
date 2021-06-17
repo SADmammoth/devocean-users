@@ -16,7 +16,6 @@ module.exports = {
     },
     teammateId: {
       type: 'string',
-      required: true,
       meta: { swagger: { in: 'body' } },
     },
     role: {
@@ -29,18 +28,28 @@ module.exports = {
     badRequest: {
       responseType: 'badRequest',
     },
+    notUnique: { responseType: 'notUnique' },
   },
 
-  fn: async function ({ login, password, teammateId, role }) {
+  fn: async function ({ login, password, teammateId, role = 'Admin' }) {
     const foundRole = await Role.findOne({
-      or: [{ name: role || 'Admin' }, { id: role }],
+      or: [{ name: role }, { id: role }],
     });
     if (!foundRole) throw 'badRequest';
 
     const credentials = await Credentials.create({
       login,
       password,
-    }).fetch();
+    })
+      .intercept((err) => {
+        if (err.code === 'E_UNIQUE') {
+          return {
+            notUnique: 'User already exists',
+          };
+        }
+        return err;
+      })
+      .fetch();
 
     const user = await User.create({
       credentials: credentials.id,
