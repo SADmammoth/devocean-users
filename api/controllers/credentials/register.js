@@ -51,12 +51,15 @@ module.exports = {
       })
       .fetch();
 
+    const workspace = await Workspace.create().fetch();
+
     const user = await User.create({
       credentials: credentials.id,
       teammateId: teammateId,
       role: foundRole.id,
+      workspaceId: workspace.id,
     }).fetch();
 
-    return { teammateId: user.teammateId, login };
+    return { teammateId: user.teammateId, login, workspaceId: workspace.id };
   },
 };

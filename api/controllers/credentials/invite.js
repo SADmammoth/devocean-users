@@ -23,6 +23,9 @@ module.exports = {
       type: 'string',
       meta: { swagger: { in: 'body' } },
     },
+    workspaceId: {
+      type: 'string',
+    },
   },
 
   exits: {
@@ -31,7 +34,13 @@ module.exports = {
     },
   },
 
-  fn: async function ({ login, password, teammateId, role = 'User' }) {
+  fn: async function ({
+    login,
+    password,
+    teammateId,
+    role = 'User',
+    workspaceId,
+  }) {
     const foundRole = await Role.findOne({
       or: [{ name: role }, { id: role }],
     });
@@ -42,13 +51,21 @@ module.exports = {
       password,
     }).fetch();
 
+    const workspace = await Workspace.findOne({ id: workspaceId });
+
     const user = await User.create({
       credentials: credentials.id,
       teammateId: teammateId,
       invited: true,
       role: foundRole.id,
+      workspaceId: workspace.id,
     }).fetch();
 
-    return { teammateId: user.teammateId, login, invited: true };
+    return {
+      teammateId: user.teammateId,
+      login,
+      invited: true,
+      workspaceId: workspace.id,
+    };
   },
 };

@@ -22,5 +22,8 @@ module.exports = {
     invited: {
       type: 'boolean',
     },
+    workspaceId: {
+      model: 'workspace',
+    },
   },
 };

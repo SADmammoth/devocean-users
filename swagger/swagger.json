@@ -250,6 +250,39 @@
           },
           "invited": {
             "type": "boolean"
+          },
+          "workspaceId": {
+            "description": "JSON dictionary representing the **workspace** instance or FK when creating / updating / not populated",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/workspace"
+              }
+            ]
+          }
+        }
+      },
+      "workspace": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/workspace-without-required-constraint"
+          }
+        ]
+      },
+      "workspace-without-required-constraint": {
+        "type": "object",
+        "description": "Sails ORM Model **Workspace**",
+        "properties": {
+          "id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "users": {
+            "description": "Array of **user**'s or array of FK's when creating / updating / not populated",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/user"
+            }
           }
         }
       }
@@ -591,7 +624,16 @@
         "tags": [
           "Credentials"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "workspaceId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The requested resource"
