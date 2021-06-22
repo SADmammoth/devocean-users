@@ -136,11 +136,7 @@ module.exports = {
      ***************************************************************************/
     cors: {
       allRoutes: true,
-      allowOrigins: [
-        'https://devocean-back.herokuapp.com',
-        'https://devocean-client.herokuapp.com',
-        'https://devocean-users.herokuapp.com',
-      ],
+      allowOrigins: '*',
       allowRequestHeaders: 'Content-Type, Authorization',
     },
   },
